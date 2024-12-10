@@ -119,15 +119,27 @@ class GenomeAssemblyApp(tk.Tk):
         
         self.table.pack(fill="both", expand=True)
 
+    ###############################
+    # Function to open FASTA file #
+    ###############################
+
     def open_fasta(self):
         file_path = filedialog.askopenfilename(filetypes=[("FASTA files", "*.fasta"), ("All files", "*.*")])
         if file_path:
             self.process_fasta(file_path)
+    
+    #################################
+    # Function to open GFF/GTF file #
+    #################################
 
     def open_gtf(self):
         file_path = filedialog.askopenfilename(filetypes=[("GTF files", "*.gtf"), ("GFF files", "*.gff"), ("All files", "*.*")])
         if file_path:
             self.process_gtf(file_path)
+
+    ##################################
+    # Function to process FASTA file #
+    ##################################
 
     def process_fasta(self, file_path):
         try:
@@ -156,6 +168,10 @@ class GenomeAssemblyApp(tk.Tk):
         except Exception as e:
             messagebox.showerror("Error", f"Could not process file: {e}")
     
+    ##################################
+    # Function to process FASTA file #
+    ##################################
+
     def process_gtf(self, file_path):
         try:
             with open(file_path, "r") as file:
@@ -195,6 +211,10 @@ class GenomeAssemblyApp(tk.Tk):
         except Exception as e:
             messagebox.showerror("Error", f"Could not process file: {e}")
 
+    #############################################################
+    # Function to update assembly FASTA details on the info tab #
+    #############################################################
+
     def update_assembly_details(self):
         total_length = sum(len(seq) for seq in self.scaffold_map.values())
         num_scaffolds = len(self.scaffold_map)
@@ -220,6 +240,10 @@ class GenomeAssemblyApp(tk.Tk):
         self.shortest_scaffold_label.config(text=f"Shortest Scaffold: {smallest_scaffold} ({smallest_length})")
         self.n50_label.config(text=f"N50: {n50}")
 
+    ##################################################
+    # Function to display fasta sequence in text box #
+    ##################################################
+
     def display_sequence(self, event):
         selected = self.scaffold_listbox.curselection()
         if selected:
@@ -231,6 +255,10 @@ class GenomeAssemblyApp(tk.Tk):
             gc_count = sum(1 for char in sequence if char in "GC")
             gc_content = (gc_count / len(sequence)) * 100 if sequence else 0
             self.gc_content_label.config(text=f"GC Content: {gc_content:.2f}%")
+
+    ###############################################################
+    # Function to perform search in table based on input keywords #
+    ###############################################################
 
     def search_table(self):
         query = self.search_entry.get().lower()
@@ -246,16 +274,28 @@ class GenomeAssemblyApp(tk.Tk):
             self.current_search_index = 0
             self.highlight_search()
 
+    #####################################################################
+    # Function for the next search button to move to next similar input #
+    #####################################################################
+
     def next_search(self):
         if self.search_results and self.current_search_index < len(self.search_results) - 1:
             self.current_search_index += 1
             self.highlight_search()
+
+    #####################################################################
+    # Function for the next search button to move to next similar input #
+    #####################################################################
 
     def previous_search(self):
         if self.search_results and self.current_search_index > 0:
             self.current_search_index -= 1
             self.highlight_search()
 
+    ###############################################################
+    # Function to highlighted the row corresponding to the search #
+    ###############################################################
+    
     def highlight_search(self):
         for row in self.table.selection():
             self.table.selection_remove(row)
