@@ -1,2 +1,2 @@
-# Genome_Sequence_Analyzer
+# Assembly Sequence & GFF/GTF Analyzer
  Genome Sequence Analyser
