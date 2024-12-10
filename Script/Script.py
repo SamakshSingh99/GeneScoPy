@@ -83,6 +83,24 @@ class GenomeAssemblyApp(tk.Tk):
         self.table_frame = tk.LabelFrame(self, text="GTF/GFF Data", padx=10, pady=10)
         self.table_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
+        # Search Bar
+        self.search_frame = tk.Frame(self)
+        self.search_frame.pack(fill="x", padx=10, pady=5)
+
+        self.search_label = tk.Label(self.search_frame, text="Search:")
+        self.search_label.pack(side="left", padx=5)
+
+        self.search_entry = tk.Entry(self.search_frame)
+        self.search_entry.pack(side="left", fill="x", expand=True, padx=5)
+
+        self.search_button = tk.Button(self.search_frame, text="Search", command=self.search_table)
+        self.search_button.pack(side="left", padx=5)
+
+        self.prev_button = tk.Button(self.search_frame, text="Previous", command=self.previous_match, state="disabled")
+        self.prev_button.pack(side="left", padx=5)
+
+        self.next_button = tk.Button(self.search_frame, text="Next", command=self.next_match, state="disabled")
+        self.next_button.pack(side="left", padx=5)
         self.table = ttk.Treeview(self.table_frame, columns=(
             "Sequence", "Source", "Feature", "Start", "End", "Strand", "Frame", "Gene Name"), show="headings")
         
@@ -154,8 +172,6 @@ class GenomeAssemblyApp(tk.Tk):
                             gene_name = "Unknown"
                             if 'gene "' in attributes:  # GTF format
                                 gene_name = attributes.split('gene "')[1].split('"')[0]
-                            elif 'gene_id "' in attributes:  # GTF format alternative
-                                gene_name = attributes.split('gene_id "')[1].split('"')[0]
                             elif "gene=" in attributes:  # GFF format
                                 gene_name = attributes.split("gene=")[1].split(";")[0]
                             elif "Name=" in attributes:  # GFF format alternative
@@ -204,6 +220,19 @@ class GenomeAssemblyApp(tk.Tk):
             gc_count = sum(1 for char in sequence if char in "GC")
             gc_content = (gc_count / len(sequence)) * 100 if sequence else 0
             self.gc_content_label.config(text=f"GC Content: {gc_content:.2f}%")
+
+    def search_table(self):
+        query = self.search_entry.get().lower()
+        for row in self.table.get_children():
+            values = self.table.item(row, "values")
+            if any(query in str(value).lower() for value in values):
+                self.table.selection_set(row)
+                self.table.see(row)
+                break
+
+    def reset_table(self):
+        self.table.selection_remove(*self.table.selection())
+        self.search_entry.delete(0, tk.END)
 
 if __name__ == "__main__":
     app = GenomeAssemblyApp()
