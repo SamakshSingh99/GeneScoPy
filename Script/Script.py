@@ -44,7 +44,7 @@ class GenomeAssemblyApp(tk.Tk):
     ##############################
 
     def create_widgets(self):
-        
+
         # Assembly Details Panel
         self.details_frame = tk.LabelFrame(self, text="Assembly Details", padx=10, pady=10)
         self.details_frame.pack(fill="x", padx=10, pady=5)
@@ -90,6 +90,91 @@ class GenomeAssemblyApp(tk.Tk):
         self.table.heading("Source", text="Source")
         self.table.heading("Feature", text="Feature")
         self.table.pack(fill="both", expand=True)
+
+    def open_fasta(self):
+        file_path = filedialog.askopenfilename(filetypes=[("FASTA files", "*.fasta"), ("All files", "*.*")])
+        if file_path:
+            self.process_fasta(file_path)
+
+    def open_gtf(self):
+        file_path = filedialog.askopenfilename(filetypes=[("GTF files", "*.gtf"), ("GFF files", "*.gff"), ("All files", "*.*")])
+        if file_path:
+            self.process_gtf(file_path)
+
+    def process_fasta(self, file_path):
+        try:
+            self.scaffold_map.clear()
+            self.scaffold_listbox.delete(0, tk.END)
+            with open(file_path, "r") as file:
+                scaffold = None
+                sequence = []
+                for line in file:
+                    line = line.strip()
+                    if line.startswith(">"):
+                        if scaffold:
+                            self.scaffold_map[scaffold] = "".join(sequence)
+                        scaffold = line[1:]
+                        sequence = []
+                    else:
+                        sequence.append(line)
+                if scaffold:
+                    self.scaffold_map[scaffold] = "".join(sequence)
+
+            # Populate details
+            self.file_label.config(text=f"File Name: {file_path.split('/')[-1]}")
+            self.update_assembly_details()
+            self.scaffold_listbox.insert(tk.END, *self.scaffold_map.keys())
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not process file: {e}")
+    
+    def process_gtf(self, file_path):
+        try:
+            with open(file_path, "r") as file:
+                for line in file:
+                    if not line.startswith("#"):
+                        parts = line.strip().split("\t")
+                        if len(parts) >= 3:
+                            self.table.insert("", "end", values=(parts[0], parts[1], parts[2]))
+        except Exception as e:
+            messagebox.showerror("Error", f"Could not process file: {e}")
+
+    def update_assembly_details(self):
+        total_length = sum(len(seq) for seq in self.scaffold_map.values())
+        num_scaffolds = len(self.scaffold_map)
+
+        largest_scaffold = max(self.scaffold_map, key=lambda x: len(self.scaffold_map[x]))
+        largest_length = len(self.scaffold_map[largest_scaffold])
+
+        smallest_scaffold = min(self.scaffold_map, key=lambda x: len(self.scaffold_map[x]))
+        smallest_length = len(self.scaffold_map[smallest_scaffold])
+
+        sorted_lengths = sorted(len(seq) for seq in self.scaffold_map.values())
+        cumulative_length = 0
+        n50 = 0
+        for length in sorted_lengths:
+            cumulative_length += length
+            if cumulative_length >= total_length / 2:
+                n50 = length
+                break
+
+        self.assembly_length_label.config(text=f"Total Assembly Length: {total_length}")
+        self.num_scaffolds_label.config(text=f"Total Number of Scaffolds: {num_scaffolds}")
+        self.largest_scaffold_label.config(text=f"Largest Scaffold: {largest_scaffold} ({largest_length})")
+        self.shortest_scaffold_label.config(text=f"Shortest Scaffold: {smallest_scaffold} ({smallest_length})")
+        self.n50_label.config(text=f"N50: {n50}")
+
+    def display_sequence(self, event):
+        selected = self.scaffold_listbox.curselection()
+        if selected:
+            scaffold = self.scaffold_listbox.get(selected)
+            sequence = self.scaffold_map.get(scaffold, "")
+            self.sequence_text.delete(1.0, tk.END)
+            self.sequence_text.insert(tk.END, sequence)
+            # Calculate GC content
+            gc_count = sum(1 for char in sequence if char in "GC")
+            gc_content = (gc_count / len(sequence)) * 100 if sequence else 0
+            self.gc_content_label.config(text=f"GC Content: {gc_content:.2f}%")
 
 if __name__ == "__main__":
     app = GenomeAssemblyApp()
