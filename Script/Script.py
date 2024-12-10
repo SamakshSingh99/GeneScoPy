@@ -19,32 +19,30 @@ from collections import defaultdict
 
 class GenomeAssemblyApp(tk.Tk):
     def __init__(self):
-        super().__init__() # Initializing parent Tk class
-        self.title("Genome Assembly Analyzer") # Title
-        self.geometry("900x900") # Window size
-        self.scaffold_map = {} # Empty dictionary to Stores Scaffold and sequences
-        self.create_menu() # Call method for creating menu bar
-        self.create_widgets() # call method for creating widgets
+        super().__init__()  # Initializing parent Tk class
+        self.title("Genome Assembly Analyzer")  # Title
+        self.geometry("1500x900")  # Window size
+        self.scaffold_map = {}  # Empty dictionary to Stores Scaffold and sequences
+        self.create_menu()  # Call method for creating menu bar
+        self.create_widgets()  # call method for creating widgets
 
     #####################
     # Creating Menu Bar #
     #####################
 
     def create_menu(self):
-
         menu_bar = tk.Menu(self)
         file_menu = tk.Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label ="Open FASTA", command =self.open_fasta)
-        file_menu.add_command(label ="Open GTF/GFF", command =self.open_gtf)
-        menu_bar.add_cascade(label = "File", menu = file_menu)
-        self.config(menu = menu_bar)
+        file_menu.add_command(label="Open FASTA", command=self.open_fasta)
+        file_menu.add_command(label="Open GTF/GFF", command=self.open_gtf)
+        menu_bar.add_cascade(label="File", menu=file_menu)
+        self.config(menu=menu_bar)
 
     ##############################
     # Function to Create Widgets #
     ##############################
 
     def create_widgets(self):
-
         # Assembly Details Panel
         self.details_frame = tk.LabelFrame(self, text="Assembly Details", padx=10, pady=10)
         self.details_frame.pack(fill="x", padx=10, pady=5)
@@ -81,14 +79,22 @@ class GenomeAssemblyApp(tk.Tk):
         self.sequence_text = tk.Text(self.scaffold_frame, wrap="word")
         self.sequence_text.pack(side="right", fill="both", expand=True)
 
-        # GTF/GFF Table
+        # GTF/GFF Table with additional columns
         self.table_frame = tk.LabelFrame(self, text="GTF/GFF Data", padx=10, pady=10)
         self.table_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
-        self.table = ttk.Treeview(self.table_frame, columns=("Sequence", "Source", "Feature"), show="headings")
+        self.table = ttk.Treeview(self.table_frame, columns=(
+            "Sequence", "Source", "Feature", "Start", "End", "Strand", "Frame", "Gene Name"), show="headings")
+        
         self.table.heading("Sequence", text="Sequence")
         self.table.heading("Source", text="Source")
         self.table.heading("Feature", text="Feature")
+        self.table.heading("Start", text="Start Position")
+        self.table.heading("End", text="End Position")
+        self.table.heading("Strand", text="Strand")
+        self.table.heading("Frame", text="Frame")
+        self.table.heading("Gene Name", text="Gene Name")
+        
         self.table.pack(fill="both", expand=True)
 
     def open_fasta(self):
@@ -134,8 +140,31 @@ class GenomeAssemblyApp(tk.Tk):
                 for line in file:
                     if not line.startswith("#"):
                         parts = line.strip().split("\t")
-                        if len(parts) >= 3:
-                            self.table.insert("", "end", values=(parts[0], parts[1], parts[2]))
+                        if len(parts) >= 9:  # Ensure there's enough columns
+                            sequence = parts[0]   # seqname
+                            source = parts[1]      # source
+                            feature = parts[2]     # feature type (gene, exon, etc.)
+                            start = parts[3]       # start position
+                            end = parts[4]         # end position
+                            strand = parts[6]      # strand (+ or -)
+                            frame = parts[7]       # frame
+                            attributes = parts[8]  # gene ID or gene name
+
+                            # Extract the gene name from the attributes (assuming it's in 'gene_name' or 'gene_id')
+                            gene_name = "Unknown"
+                            if 'gene "' in attributes:  # GTF format
+                                gene_name = attributes.split('gene "')[1].split('"')[0]
+                            elif 'gene_id "' in attributes:  # GTF format alternative
+                                gene_name = attributes.split('gene_id "')[1].split('"')[0]
+                            elif "gene=" in attributes:  # GFF format
+                                gene_name = attributes.split("gene=")[1].split(";")[0]
+                            elif "Name=" in attributes:  # GFF format alternative
+                                gene_name = attributes.split("Name=")[1].split(";")[0]
+
+
+                            # Insert data into table
+                            self.table.insert("", "end", values=(sequence, source, feature, start, end, strand, frame, gene_name))
+
         except Exception as e:
             messagebox.showerror("Error", f"Could not process file: {e}")
 
