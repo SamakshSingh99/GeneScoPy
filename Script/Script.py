@@ -1,6 +1,6 @@
 
 '''
-This tool allows users to open and inspect genome sequence files (FASTA) 
+This tool allows users to open and inspect genome assembly sequence files (FASTA) 
 and genome annotation files (GTF/GFF) through a graphical user interface. 
 It provides a platform for basic genome assembly analysis and file management.
 '''
