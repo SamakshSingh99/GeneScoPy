@@ -28,6 +28,7 @@ class GenomeAssemblyApp(tk.Tk):
         self.search_results = [] # Initializing search index
         self.current_search_index = -1 # Initializing search index
 
+
     #####################
     # Creating Menu Bar #
     #####################
@@ -169,9 +170,9 @@ class GenomeAssemblyApp(tk.Tk):
         except Exception as e:
             messagebox.showerror("Error", f"Could not process file: {e}")
     
-    ##################################
-    # Function to process FASTA file #
-    ##################################
+    ####################################
+    # Function to process GTF/GFF file #
+    ####################################
 
     def process_gtf(self, file_path):
         try:
@@ -257,6 +258,7 @@ class GenomeAssemblyApp(tk.Tk):
             gc_content = (gc_count / len(sequence)) * 100 if sequence else 0
             self.gc_content_label.config(text=f"GC Content: {gc_content:.2f}%")
 
+
     ###############################################################
     # Function to perform search in table based on input keywords #
     ###############################################################
@@ -275,18 +277,18 @@ class GenomeAssemblyApp(tk.Tk):
             self.current_search_index = 0
             self.highlight_search()
 
-    #####################################################################
-    # Function for the next search button to move to next similar input #
-    #####################################################################
+    #########################################################################
+    # Function for the next search button to navigate to next similar input #
+    #########################################################################
 
     def next_search(self):
         if self.search_results and self.current_search_index < len(self.search_results) - 1:
             self.current_search_index += 1
             self.highlight_search()
 
-    #####################################################################
-    # Function for the next search button to move to next similar input #
-    #####################################################################
+    #############################################################################
+    # Function for the previous search button to navigate to next similar input #
+    #############################################################################
 
     def previous_search(self):
         if self.search_results and self.current_search_index > 0:
