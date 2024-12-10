@@ -29,7 +29,6 @@ class GenomeAssemblyApp(tk.Tk):
         self.search_results = [] # Initializing search index
         self.current_search_index = -1 # Initializing search index
 
-
     #####################
     # Creating Menu Bar #
     #####################
