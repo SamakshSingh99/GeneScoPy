@@ -176,6 +176,11 @@ class GenomeAssemblyApp(tk.Tk):
 
     def process_gtf(self, file_path):
         try:
+
+            # Clear existing table contents before processing a new file
+            for row in self.table.get_children():
+                self.table.delete(row)
+                
             with open(file_path, "r") as file:
                 for line in file:
                     if not line.startswith("#"):
