@@ -106,9 +106,9 @@ class GenomeAssemblyApp(tk.Tk):
         self.reset_button.pack(side="left", padx=5)
 
         self.table = ttk.Treeview(self.table_frame, columns=(
-            "Sequence", "Source", "Feature", "Start", "End", "Strand", "Frame", "Product","Gene Name"), show="headings")
+            "Scaffold", "Source", "Feature", "Start", "End", "Strand", "Frame", "Product","Gene Name"), show="headings")
         
-        self.table.heading("Sequence", text="Sequence")
+        self.table.heading("Scaffold", text="Scaffold")
         self.table.heading("Source", text="Source")
         self.table.heading("Feature", text="Feature")
         self.table.heading("Start", text="Start Position")
@@ -180,7 +180,7 @@ class GenomeAssemblyApp(tk.Tk):
                     if not line.startswith("#"):
                         parts = line.strip().split("\t")
                         if len(parts) >= 9:  # Ensure there's enough columns
-                            sequence = parts[0]   # seqname
+                            scaffold = parts[0]   # scaffold
                             source = parts[1]      # source
                             feature = parts[2]     # feature type (gene, exon, etc.)
                             start = parts[3]       # start position
@@ -207,7 +207,7 @@ class GenomeAssemblyApp(tk.Tk):
 
 
                             # Insert data into table
-                            self.table.insert("", "end", values=(sequence, source, feature, start, end, strand, frame, product_out, gene_name))
+                            self.table.insert("", "end", values=(scaffold, source, feature, start, end, strand, frame, product_out, gene_name))
 
         except Exception as e:
             messagebox.showerror("Error", f"Could not process file: {e}")
@@ -308,7 +308,7 @@ class GenomeAssemblyApp(tk.Tk):
     #######################################################
     # Function for reset button to the clear search check #
     #######################################################
-    
+
     def reset_table(self):
         self.search_results.clear()
         self.current_search_index = -1
