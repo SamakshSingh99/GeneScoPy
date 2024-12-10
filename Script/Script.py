@@ -20,11 +20,13 @@ from collections import defaultdict
 class GenomeAssemblyApp(tk.Tk):
     def __init__(self):
         super().__init__()  # Initializing parent Tk class
-        self.title("Genome Assembly Analyzer")  # Title
+        self.title("Genome Sequence and GFF/GTF Analyzer")  # Title
         self.geometry("1500x900")  # Window size
         self.scaffold_map = {}  # Empty dictionary to Stores Scaffold and sequences
         self.create_menu()  # Call method for creating menu bar
         self.create_widgets()  # call method for creating widgets
+        self.search_results = [] # Initializing search index
+        self.current_search_index = -1 # Initializing search index
 
     #####################
     # Creating Menu Bar #
@@ -84,25 +86,26 @@ class GenomeAssemblyApp(tk.Tk):
         self.table_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
         # Search Bar
-        self.search_frame = tk.Frame(self)
-        self.search_frame.pack(fill="x", padx=10, pady=5)
+        self.search_frame = tk.Frame(self.table_frame)
+        self.search_frame.pack(fill="x", padx=5, pady=5)
 
-        self.search_label = tk.Label(self.search_frame, text="Search:")
-        self.search_label.pack(side="left", padx=5)
-
-        self.search_entry = tk.Entry(self.search_frame)
-        self.search_entry.pack(side="left", fill="x", expand=True, padx=5)
+        self.search_entry = tk.Entry(self.search_frame, width=50)
+        self.search_entry.pack(side="left", padx=5)
 
         self.search_button = tk.Button(self.search_frame, text="Search", command=self.search_table)
         self.search_button.pack(side="left", padx=5)
 
-        self.prev_button = tk.Button(self.search_frame, text="Previous", command=self.previous_match, state="disabled")
-        self.prev_button.pack(side="left", padx=5)
+        self.previous_button = tk.Button(self.search_frame, text="Previous", command=self.previous_search)
+        self.previous_button.pack(side="left", padx=5)
 
-        self.next_button = tk.Button(self.search_frame, text="Next", command=self.next_match, state="disabled")
+        self.next_button = tk.Button(self.search_frame, text="Next", command=self.next_search)
         self.next_button.pack(side="left", padx=5)
+
+        self.reset_button = tk.Button(self.search_frame, text="Reset", command=self.reset_table)
+        self.reset_button.pack(side="left", padx=5)
+
         self.table = ttk.Treeview(self.table_frame, columns=(
-            "Sequence", "Source", "Feature", "Start", "End", "Strand", "Frame", "Gene Name"), show="headings")
+            "Sequence", "Source", "Feature", "Start", "End", "Strand", "Frame", "Product","Gene Name"), show="headings")
         
         self.table.heading("Sequence", text="Sequence")
         self.table.heading("Source", text="Source")
@@ -111,6 +114,7 @@ class GenomeAssemblyApp(tk.Tk):
         self.table.heading("End", text="End Position")
         self.table.heading("Strand", text="Strand")
         self.table.heading("Frame", text="Frame")
+        self.table.heading("Product", text="Product")
         self.table.heading("Gene Name", text="Gene Name")
         
         self.table.pack(fill="both", expand=True)
@@ -166,6 +170,7 @@ class GenomeAssemblyApp(tk.Tk):
                             end = parts[4]         # end position
                             strand = parts[6]      # strand (+ or -)
                             frame = parts[7]       # frame
+                            product = parts[8]
                             attributes = parts[8]  # gene ID or gene name
 
                             # Extract the gene name from the attributes (assuming it's in 'gene_name' or 'gene_id')
@@ -176,10 +181,16 @@ class GenomeAssemblyApp(tk.Tk):
                                 gene_name = attributes.split("gene=")[1].split(";")[0]
                             elif "Name=" in attributes:  # GFF format alternative
                                 gene_name = attributes.split("Name=")[1].split(";")[0]
+                            
+                            product_out = "Unknown"
+                            if 'product "' in product: # GTF format
+                                product_out = product.split('product "')[1].split('"')[0]
+                            elif "product=" in product: #GFF format
+                                product_out = product.split("product=")[1].split(";")[0]
 
 
                             # Insert data into table
-                            self.table.insert("", "end", values=(sequence, source, feature, start, end, strand, frame, gene_name))
+                            self.table.insert("", "end", values=(sequence, source, feature, start, end, strand, frame, product_out, gene_name))
 
         except Exception as e:
             messagebox.showerror("Error", f"Could not process file: {e}")
@@ -223,14 +234,39 @@ class GenomeAssemblyApp(tk.Tk):
 
     def search_table(self):
         query = self.search_entry.get().lower()
-        for row in self.table.get_children():
+        self.search_results.clear()  # Clear previous search results
+        self.current_search_index = -1  # Reset the search index
+
+        for idx, row in enumerate(self.table.get_children()):
             values = self.table.item(row, "values")
             if any(query in str(value).lower() for value in values):
-                self.table.selection_set(row)
-                self.table.see(row)
-                break
+                self.search_results.append(row)
+
+        if self.search_results:
+            self.current_search_index = 0
+            self.highlight_search()
+
+    def next_search(self):
+        if self.search_results and self.current_search_index < len(self.search_results) - 1:
+            self.current_search_index += 1
+            self.highlight_search()
+
+    def previous_search(self):
+        if self.search_results and self.current_search_index > 0:
+            self.current_search_index -= 1
+            self.highlight_search()
+
+    def highlight_search(self):
+        for row in self.table.selection():
+            self.table.selection_remove(row)
+        if self.search_results:
+            row = self.search_results[self.current_search_index]
+            self.table.selection_set(row)
+            self.table.see(row)
 
     def reset_table(self):
+        self.search_results.clear()
+        self.current_search_index = -1
         self.table.selection_remove(*self.table.selection())
         self.search_entry.delete(0, tk.END)
 
