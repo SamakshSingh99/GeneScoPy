@@ -45,6 +45,7 @@ class GenomeAssemblyApp(tk.Tk):
     ##############################
 
     def create_widgets(self):
+
         # Assembly Details Panel
         self.details_frame = tk.LabelFrame(self, text="Assembly Details", padx=10, pady=10)
         self.details_frame.pack(fill="x", padx=10, pady=5)
@@ -295,7 +296,7 @@ class GenomeAssemblyApp(tk.Tk):
     ###############################################################
     # Function to highlighted the row corresponding to the search #
     ###############################################################
-    
+
     def highlight_search(self):
         for row in self.table.selection():
             self.table.selection_remove(row)
@@ -304,6 +305,10 @@ class GenomeAssemblyApp(tk.Tk):
             self.table.selection_set(row)
             self.table.see(row)
 
+    #######################################################
+    # Function for reset button to the clear search check #
+    #######################################################
+    
     def reset_table(self):
         self.search_results.clear()
         self.current_search_index = -1
