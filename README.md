@@ -1,2 +1,2 @@
-# GenomeInspector
+# AssemblyScope
  Genome Sequence Analyser
