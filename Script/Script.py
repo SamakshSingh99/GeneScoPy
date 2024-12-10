@@ -16,3 +16,12 @@ from collections import defaultdict
 ######################################
 # 2. Defining Main Application Class #
 ######################################
+
+class GenomeAssemblyApp(tk.Tk):
+    def __init__(self):
+        super().__init__() # Initializing parent Tk class
+        self.title("Genome Assembly Analyzer") # Title
+        self.geometry("900x900") # Window size
+        self.scaffold_map = {} # Empty dictionary to Stores Scaffold and sequences
+        self.create_menu() # Call method for creating menu bar
+        self.create_widgets() # call method for creating widgets
