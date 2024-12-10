@@ -25,3 +25,9 @@ class GenomeAssemblyApp(tk.Tk):
         self.scaffold_map = {} # Empty dictionary to Stores Scaffold and sequences
         self.create_menu() # Call method for creating menu bar
         self.create_widgets() # call method for creating widgets
+
+
+
+if __name__ == "__main__":
+    app = GenomeAssemblyApp()
+    app.mainloop()
