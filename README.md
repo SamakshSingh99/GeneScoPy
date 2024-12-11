@@ -65,7 +65,10 @@ GeneScoPy is a standalone graphical user interface (GUI) tool for working with g
 ### Searching Annotations
 - Use the search bar to find specific entries in the annotation table.
 - Navigate through results using the `Previous` and `Next` buttons.
+- Check the sequence box to find the highlighted regions for selection.
 - Reset the search to view the entire table again.
+  
+ <img width="1019" alt="Screenshot 2024-12-11 at 11 32 44 AM" src="https://github.com/user-attachments/assets/adab1790-f11c-4389-bcb5-4edb67c41d90">
 
 ## File Management
 - Scaffold sequences can be selected from the list and displayed in the sequence viewer for detailed inspection.
