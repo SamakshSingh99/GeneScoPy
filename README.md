@@ -6,7 +6,7 @@
 Genome assembly sequence and GFF/GTF file analyzer
 
 ## Overview
-GeneScoPy is a standalone graphical user interface (GUI) tool for working with genome assembly sequence files (FASTA) and genome annotation files (GTF/GFF). It provides a platform for:
+GeneScoPy is a python based standalone graphical user interface (GUI) tool for working with genome assembly sequence files (FASTA) and genome annotation files (GTF/GFF). It provides a platform for:
 
 - Inspecting and managing genome assembly files.
 - Viewing genome annotation details.
