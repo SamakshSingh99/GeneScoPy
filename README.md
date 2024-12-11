@@ -42,6 +42,8 @@ GeneScoPy is a standalone graphical user interface (GUI) tool for working with g
 ### Opening Files
 1. Launch the application.
 2. Use the `File` menu to open a FASTA file or GTF/GFF file.
+   
+<img width="1019" alt="Screenshot 2024-12-11 at 10 03 48 AM" src="https://github.com/user-attachments/assets/d9e8c53f-5536-459a-99cf-a149749adb1d">
 
 ### Viewing Assembly Details
 - After loading a FASTA file, the "Assembly Details" section will display information about:
@@ -49,10 +51,16 @@ GeneScoPy is a standalone graphical user interface (GUI) tool for working with g
   - Number of scaffolds.
   - Largest and smallest scaffolds.
   - N50 value.
+    
+<img width="1020" alt="Screenshot 2024-12-11 at 10 04 51 AM" src="https://github.com/user-attachments/assets/50da89a5-23e1-4261-913b-40c7f88d3aa7">
+
 
 ### Viewing Annotation Data
 - Load a GTF/GFF file to populate the annotation table.
 - Use the table columns to explore scaffold details, gene annotations, and other metadata.
+
+<img width="1019" alt="Screenshot 2024-12-11 at 10 06 47 AM" src="https://github.com/user-attachments/assets/659de93e-af6d-4f47-932f-02317aca6e52">
+
 
 ### Searching Annotations
 - Use the search bar to find specific entries in the annotation table.
