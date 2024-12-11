@@ -109,6 +109,9 @@ class GenomeAssemblyApp(tk.Tk):
         self.table = ttk.Treeview(self.table_frame, columns=(
             "Scaffold", "Source", "Feature", "Start", "End", "Strand", "Frame", "Product","Gene Name"), show="headings")
         
+        # Highlight sequence region based on table selection
+        self.table.bind("<<TreeviewSelect>>", self.highlight_sequence_region)
+
         self.table.heading("Scaffold", text="Scaffold")
         self.table.heading("Source", text="Source")
         self.table.heading("Feature", text="Feature")
@@ -321,6 +324,37 @@ class GenomeAssemblyApp(tk.Tk):
         self.current_search_index = -1
         self.table.selection_remove(*self.table.selection())
         self.search_entry.delete(0, tk.END)
+
+    #########################################################################
+    # Function to highlight FASTA sequence region for selected row in table #
+    #########################################################################
+
+    def highlight_sequence_region(self, event):
+        # Get selected row in the GTF/GFF table
+        selected_item = self.table.selection()
+        if selected_item:
+            item_values = self.table.item(selected_item, 'values')
+            if len(item_values) >= 5:  # Ensure enough columns are available
+                scaffold = item_values[0]
+                start = int(item_values[3])
+                end = int(item_values[4])
+            
+                # Check if the scaffold exists in the scaffold_map
+                if scaffold in self.scaffold_map:
+                    sequence = self.scaffold_map[scaffold]
+                
+                    # Extract and highlight the region
+                    region = sequence[start-1:end]  # Convert 1-based to 0-based indexing
+                    self.sequence_text.delete(1.0, tk.END)  # Clear the Text widget
+                    self.sequence_text.insert(tk.END, sequence)  # Insert the full scaffold sequence
+                
+                    # Highlight the region
+                    self.sequence_text.tag_remove("highlight", 1.0, tk.END)  # Remove old highlights
+                    self.sequence_text.tag_add("highlight", f"1.0+{start-1}c", f"1.0+{end}c")
+                    self.sequence_text.tag_configure("highlight", background="cyan")
+                else:
+                    messagebox.showerror("Error", f"Scaffold {scaffold} not found in FASTA file.")
+
 
 if __name__ == "__main__":
     app = GenomeAssemblyApp()
