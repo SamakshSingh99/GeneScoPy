@@ -158,7 +158,8 @@ class GenomeAssemblyApp(tk.Tk):
                     if line.startswith(">"):
                         if scaffold:
                             self.scaffold_map[scaffold] = "".join(sequence)
-                        scaffold = line[1:]
+                        # Take only the first word after '>'
+                        scaffold = line[1:].split()[0]
                         sequence = []
                     else:
                         sequence.append(line)
