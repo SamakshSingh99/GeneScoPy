@@ -1,4 +1,8 @@
 # GeneScoPy
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)
+
+
 Genome assembly sequence and GFF/GTF file analyzer
 
 ## Overview
@@ -8,13 +12,14 @@ GeneScoPy is a standalone graphical user interface (GUI) tool for working with g
 - Viewing genome annotation details.
 - Performing basic analyses such as computing assembly statistics (e.g., N50, GC content, scaffold sizes).
 - Searching and navigating annotation files efficiently.
-
+- Higlight the region of interest in the FASTA sequence (selection based).
 ## Key Features
 - **File Compatibility**: Supports FASTA and GTF/GFF file formats.
 - **Assembly Details**: Displays total assembly length, scaffold counts, largest and smallest scaffolds, N50, and GC content.
 - **Annotation Table**: Presents GTF/GFF data in an easy-to-navigate table with fields like scaffold, source, feature, start and end positions, strand, frame, product, and gene name.
 - **Sequence Viewer**: Allows users to view scaffold sequences in a text editor.
 - **Search Functionality**: Provides tools for searching and navigating annotation records by keywords.
+- **Highlight Functionality** Highlights the sequence region of interest based annotation selection.
 - **User-Friendly Interface**: Built with a modern and intuitive GUI.
 
 ## Installation
