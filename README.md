@@ -20,8 +20,8 @@ The Genome Sequence and GFF/GTF Analyzer is a standalone graphical user interfac
 ## Installation
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/genome-analyzer.git
-   cd genome-analyzer
+   git clone https://github.com/SamakshSingh99/AssemblyScope/
+   cd AssemblyScope
    ```
 2. Ensure you have Python installed (version 3.7 or higher).
 3. Install required dependencies:
@@ -57,12 +57,6 @@ The Genome Sequence and GFF/GTF Analyzer is a standalone graphical user interfac
 ## File Management
 - Scaffold sequences can be selected from the list and displayed in the sequence viewer for detailed inspection.
 
-## Example
-Here is an example of loading and analyzing a genome assembly:
-1. Open a FASTA file to compute assembly statistics such as N50 and GC content.
-2. Open a corresponding GTF/GFF file to explore annotation details.
-3. Search for specific genes or features using the search functionality.
-
 ## Contributing
 Contributions are welcome! If you'd like to enhance the tool or fix any bugs:
 1. Fork the repository.
@@ -76,4 +70,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 Special thanks to the bioinformatics community for inspiring this project.
 
 ## Contact
-For questions or support, please open an issue on the GitHub repository or reach out to `your.email@example.com`.
+For questions or support, please open an issue on the GitHub repository.
