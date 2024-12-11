@@ -21,7 +21,7 @@ from collections import defaultdict
 class GenomeAssemblyApp(tk.Tk):
     def __init__(self):
         super().__init__()  # Initializing parent Tk class
-        self.title("Genome Sequence and GFF/GTF Analyzer")  # Title
+        self.title("GeneScoPy")  # Title
         self.geometry("1500x900")  # Window size
         self.scaffold_map = {}  # Empty dictionary to Stores Scaffold and sequences
         self.create_menu()  # Call method for creating menu bar
