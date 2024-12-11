@@ -1,8 +1,8 @@
-# AssemblyScope
+# GeneScoPy
 Genome assembly sequence and GFF/GTF file analyzer
 
 ## Overview
-The Genome Sequence and GFF/GTF Analyzer is a standalone graphical user interface (GUI) tool for working with genome assembly sequence files (FASTA) and genome annotation files (GTF/GFF). It provides a platform for:
+GeneScoPy is a standalone graphical user interface (GUI) tool for working with genome assembly sequence files (FASTA) and genome annotation files (GTF/GFF). It provides a platform for:
 
 - Inspecting and managing genome assembly files.
 - Viewing genome annotation details.
@@ -20,8 +20,8 @@ The Genome Sequence and GFF/GTF Analyzer is a standalone graphical user interfac
 ## Installation
 1. Clone this repository:
    ```bash
-   git clone https://github.com/SamakshSingh99/AssemblyScope/
-   cd AssemblyScope
+   git clone https://github.com/SamakshSingh99/GeneScoPy/
+   cd GeneScoPy
    ```
 2. Ensure you have Python installed (version 3.7 or higher).
 3. Install required dependencies:
@@ -30,7 +30,7 @@ The Genome Sequence and GFF/GTF Analyzer is a standalone graphical user interfac
    ```
 4. Run the tool:
    ```bash
-   python genome_analyzer.py
+   python ./Script/Script.py
    ```
 
 ## How to Use
