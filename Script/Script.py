@@ -40,6 +40,12 @@ class GenomeAssemblyApp(tk.Tk):
         file_menu.add_command(label="Open GTF/GFF", command=self.open_gtf)
         menu_bar.add_cascade(label="File", menu=file_menu)
         self.config(menu=menu_bar)
+        
+        export_menu = tk.Menu(menu_bar, tearoff=0)
+        export_menu.add_command(label="Export Selected Annotation Row", command=self.export_selected_row)
+        export_menu.add_command(label="Export Full Scaffold Sequence", command=self.export_full_scaffold)
+        export_menu.add_command(label="Export Highlighted Sequence Region", command=self.export_highlighted_region)
+        menu_bar.add_cascade(label="Export", menu=export_menu)
 
     ##############################
     # Function to Create Widgets #
