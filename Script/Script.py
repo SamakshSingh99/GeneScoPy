@@ -355,7 +355,7 @@ class GenomeAssemblyApp(tk.Tk):
         start = int(item_values[3])
         end = int(item_values[4])
 
-        # Get the scaffold selected in the Listbox
+        # Check scaffold match with selection
         listbox_selection = self.scaffold_listbox.curselection()
         if not listbox_selection:
             messagebox.showwarning("Warning", "Please select the matching scaffold from the list.")
@@ -370,16 +370,28 @@ class GenomeAssemblyApp(tk.Tk):
 
         sequence = self.scaffold_map.get(scaffold, "")
         if not sequence:
-            messagebox.showerror("Error", f"Scaffold {scaffold} not found in FASTA.")
+            messagebox.showerror("Error", f"Scaffold '{scaffold}' not found in FASTA.")
             return
 
-        # Display full sequence
-        self.sequence_text.delete(1.0, tk.END)
-        self.sequence_text.insert(tk.END, sequence)
+        # Display window: +/- 500 bp around the feature
+        flank = 500
+        seq_len = len(sequence)
 
-        # Highlight region
+        display_start = max(0, start - flank - 1)  # 0-based
+        display_end = min(seq_len, end + flank)
+
+        display_seq = sequence[display_start:display_end]
+
+        self.sequence_text.delete(1.0, tk.END)
+        for i in range(0, len(display_seq), 1000):
+            self.sequence_text.insert(tk.END, display_seq[i:i+1000] + "\n")
+
+        # Calculate relative highlight position
+        highlight_start = start - display_start - 1
+        highlight_end = highlight_start + (end - start + 1)
+
         self.sequence_text.tag_remove("highlight", 1.0, tk.END)
-        self.sequence_text.tag_add("highlight", f"1.0+{start-1}c", f"1.0+{end}c")
+        self.sequence_text.tag_add("highlight", f"1.0+{highlight_start}c", f"1.0+{highlight_end}c")
         self.sequence_text.tag_configure("highlight", background="cyan")
     
     
