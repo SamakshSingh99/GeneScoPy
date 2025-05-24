@@ -352,21 +352,27 @@ class GenomeAssemblyApp(tk.Tk):
             return
 
         scaffold = item_values[0]
-        start = int(item_values[3])
-        end = int(item_values[4])
+        try:
+            start = int(item_values[3])
+            end = int(item_values[4])
+        except ValueError:
+            messagebox.showerror("Error", "Start/End coordinates must be integers.")
+            return
 
         # Check scaffold match with selection
         listbox_selection = self.scaffold_listbox.curselection()
-        if not listbox_selection:
-            messagebox.showwarning("Warning", "Please select the matching scaffold from the list.")
-            return
+        
+        # Auto-select scaffold in listbox if not already selected
+        for i in range(self.scaffold_listbox.size()):
+            if self.scaffold_listbox.get(i) == scaffold:
+                self.scaffold_listbox.selection_clear(0, tk.END)
+                self.scaffold_listbox.selection_set(i)
+                self.scaffold_listbox.activate(i)
+                selected_scaffold = scaffold  # Update selected scaffold
+                break
 
         selected_scaffold = self.scaffold_listbox.get(listbox_selection)
-
-        if scaffold != selected_scaffold:
-            messagebox.showerror("Mismatch", f"Selected feature belongs to scaffold '{scaffold}', "
-                                            f"but you have scaffold '{selected_scaffold}' selected.")
-            return
+        
 
         sequence = self.scaffold_map.get(scaffold, "")
         if not sequence:
@@ -446,8 +452,12 @@ class GenomeAssemblyApp(tk.Tk):
 
         item_values = self.table.item(selected_item[0], 'values')
         scaffold = item_values[0]
-        start = int(item_values[3])
-        end = int(item_values[4])
+        try:
+            start = int(item_values[3])
+            end = int(item_values[4])
+        except ValueError:
+            messagebox.showerror("Error", "Start/End coordinates must be integers.")
+            return
 
         if scaffold not in self.scaffold_map:
             messagebox.showerror("Error", f"{scaffold} not found in loaded FASTA.")
