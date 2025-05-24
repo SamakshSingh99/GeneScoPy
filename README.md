@@ -20,6 +20,10 @@ GeneScoPy is a python based standalone graphical user interface (GUI) tool for w
 - **Sequence Viewer**: Allows users to view scaffold sequences in a text editor.
 - **Search Functionality**: Provides tools for searching and navigating annotation records by keywords.
 - **Highlight Functionality** Highlights the sequence region of interest based annotation selection.
+- **Highlight & Export Functionality**: Highlights sequence regions based on annotation selection and allows export of:
+  - Selected annotation rows (`.csv`)
+  - Full scaffold sequences (`.fasta`)
+  - Highlighted region sequences (`.fasta`)
 - **User-Friendly Interface**: Built with a modern and intuitive GUI.
 
 ## Installation
