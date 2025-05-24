@@ -25,7 +25,7 @@ GeneScoPy is a python based standalone graphical user interface (GUI) tool for w
   - Selected annotation rows (`.csv`)
   - Highlighted feature regions (`.fasta`)
 
-🛠️ **FIXED**
+🛠️ **FIXED**  
 **24/05/2025**
 - Resolved major crash issue when loading large genome files.
 - Optimized highlight rendering to ensure smooth browsing of complete FASTA and GTF/GFF datasets without freezing.
