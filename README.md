@@ -86,7 +86,7 @@ To use these:
 2. Navigate to the `Export` menu in the menu bar.
 3. Choose the appropriate export function.
 
-<img width="1203" alt="Screenshot 2025-05-24 at 1 34 38 PM" src="https://github.com/user-attachments/assets/40a9ddc2-e598-4946-898e-fb5b0a2f9eed" />
+<img width="1019" alt="Screenshot 2025-05-24 at 1 34 38 PM" src="https://github.com/user-attachments/assets/40a9ddc2-e598-4946-898e-fb5b0a2f9eed" />
 
 ## File Management
 - Scaffold sequences can be selected from the list and displayed in the sequence viewer for detailed inspection.
