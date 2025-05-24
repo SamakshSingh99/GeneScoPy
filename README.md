@@ -74,6 +74,21 @@ GeneScoPy is a python based standalone graphical user interface (GUI) tool for w
   
  <img width="1019" alt="Screenshot 2024-12-11 at 11 32 44 AM" src="https://github.com/user-attachments/assets/adab1790-f11c-4389-bcb5-4edb67c41d90">
 
+
+### Exporting Features
+
+GeneScoPy allows exporting genome data in multiple formats directly from the GUI:
+
+- ✅ **Export Selected Annotation Row**: Save a selected gene/feature row as a `.csv` file.
+- ✅ **Export Full Scaffold**: Save the entire FASTA sequence of any scaffold in `.fasta` format.
+- ✅ **Export Highlighted Region**: After selecting a gene/feature in the annotation table, export the matching sequence region as `.fasta`.
+
+To use these:
+1. Load both a FASTA and a GTF/GFF file.
+2. Navigate to the `Export` menu in the menu bar.
+3. Choose the appropriate export function.
+
+   
 ## File Management
 - Scaffold sequences can be selected from the list and displayed in the sequence viewer for detailed inspection.
 
