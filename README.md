@@ -58,13 +58,11 @@ GeneScoPy is a python based standalone graphical user interface (GUI) tool for w
     
 <img width="1020" alt="Screenshot 2024-12-11 at 10 04 51 AM" src="https://github.com/user-attachments/assets/50da89a5-23e1-4261-913b-40c7f88d3aa7">
 
-
 ### Viewing Annotation Data
 - Load a GTF/GFF file to populate the annotation table.
 - Use the table columns to explore scaffold details, gene annotations, and other metadata.
 
 <img width="1019" alt="Screenshot 2024-12-11 at 10 06 47 AM" src="https://github.com/user-attachments/assets/659de93e-af6d-4f47-932f-02317aca6e52">
-
 
 ### Searching Annotations
 - Use the search bar to find specific entries in the annotation table.
@@ -73,7 +71,6 @@ GeneScoPy is a python based standalone graphical user interface (GUI) tool for w
 - Reset the search to view the entire table again.
   
  <img width="1019" alt="Screenshot 2024-12-11 at 11 32 44 AM" src="https://github.com/user-attachments/assets/adab1790-f11c-4389-bcb5-4edb67c41d90">
-
 
 ### Exporting Features
 
