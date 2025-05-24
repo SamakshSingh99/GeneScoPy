@@ -154,26 +154,29 @@ class GenomeAssemblyApp(tk.Tk):
 
     def process_fasta(self, file_path):
         try:
-            self.scaffold_map.clear()
+            from collections import defaultdict
+            import os
+
+            self.sequence_text.delete(1.0, tk.END)
             self.scaffold_listbox.delete(0, tk.END)
+            self.scaffold_map = defaultdict(str)
+
+            self.file_label.config(text=f"File Name: {os.path.basename(file_path)}")
+            self.loading_label = tk.Label(self.details_frame, text="Loading FASTA...", fg="red")
+            self.loading_label.pack()
+            self.update()
+
             with open(file_path, "r") as file:
                 scaffold = None
-                sequence = []
                 for line in file:
                     line = line.strip()
                     if line.startswith(">"):
-                        if scaffold:
-                            self.scaffold_map[scaffold] = "".join(sequence)
-                        # Take only the first word after '>'
                         scaffold = line[1:].split()[0]
-                        sequence = []
-                    else:
-                        sequence.append(line)
-                if scaffold:
-                    self.scaffold_map[scaffold] = "".join(sequence)
+                        self.scaffold_map[scaffold] = ""
+                    elif scaffold:
+                        self.scaffold_map[scaffold] += line
 
-            # Populate details
-            self.file_label.config(text=f"File Name: {file_path.split('/')[-1]}")
+            self.loading_label.destroy()
             self.update_assembly_details()
             self.scaffold_listbox.insert(tk.END, *self.scaffold_map.keys())
 
@@ -266,9 +269,12 @@ class GenomeAssemblyApp(tk.Tk):
         if selected:
             scaffold = self.scaffold_listbox.get(selected)
             sequence = self.scaffold_map.get(scaffold, "")
+
             self.sequence_text.delete(1.0, tk.END)
-            self.sequence_text.insert(tk.END, sequence)
-            # Calculate GC content
+
+            for i in range(0, len(sequence), 1000):  # Chunk-wise insert for large sequences
+                self.sequence_text.insert(tk.END, sequence[i:i+1000] + "\n")
+
             gc_count = sum(1 for char in sequence if char in "GC")
             gc_content = (gc_count / len(sequence)) * 100 if sequence else 0
             self.gc_content_label.config(text=f"GC Content: {gc_content:.2f}%")
@@ -337,30 +343,44 @@ class GenomeAssemblyApp(tk.Tk):
     #########################################################################
 
     def highlight_sequence_region(self, event):
-        # Get selected row in the GTF/GFF table
         selected_item = self.table.selection()
-        if selected_item:
-            item_values = self.table.item(selected_item, 'values')
-            if len(item_values) >= 5:  # Ensure enough columns are available
-                scaffold = item_values[0]
-                start = int(item_values[3])
-                end = int(item_values[4])
-            
-                # Check if the scaffold exists in the scaffold_map
-                if scaffold in self.scaffold_map:
-                    sequence = self.scaffold_map[scaffold]
-                
-                    # Extract and highlight the region
-                    region = sequence[start-1:end]  # Convert 1-based to 0-based indexing
-                    self.sequence_text.delete(1.0, tk.END)  # Clear the Text widget
-                    self.sequence_text.insert(tk.END, sequence)  # Insert the full scaffold sequence
-                
-                    # Highlight the region
-                    self.sequence_text.tag_remove("highlight", 1.0, tk.END)  # Remove old highlights
-                    self.sequence_text.tag_add("highlight", f"1.0+{start-1}c", f"1.0+{end}c")
-                    self.sequence_text.tag_configure("highlight", background="cyan")
-                else:
-                    messagebox.showerror("Error", f"Scaffold {scaffold} not found in FASTA file.")
+        if not selected_item:
+            return
+
+        item_values = self.table.item(selected_item, 'values')
+        if len(item_values) < 5:
+            return
+
+        scaffold = item_values[0]
+        start = int(item_values[3])
+        end = int(item_values[4])
+
+        # Get the scaffold selected in the Listbox
+        listbox_selection = self.scaffold_listbox.curselection()
+        if not listbox_selection:
+            messagebox.showwarning("Warning", "Please select the matching scaffold from the list.")
+            return
+
+        selected_scaffold = self.scaffold_listbox.get(listbox_selection)
+
+        if scaffold != selected_scaffold:
+            messagebox.showerror("Mismatch", f"Selected feature belongs to scaffold '{scaffold}', "
+                                            f"but you have scaffold '{selected_scaffold}' selected.")
+            return
+
+        sequence = self.scaffold_map.get(scaffold, "")
+        if not sequence:
+            messagebox.showerror("Error", f"Scaffold {scaffold} not found in FASTA.")
+            return
+
+        # Display full sequence
+        self.sequence_text.delete(1.0, tk.END)
+        self.sequence_text.insert(tk.END, sequence)
+
+        # Highlight region
+        self.sequence_text.tag_remove("highlight", 1.0, tk.END)
+        self.sequence_text.tag_add("highlight", f"1.0+{start-1}c", f"1.0+{end}c")
+        self.sequence_text.tag_configure("highlight", background="cyan")
     
     
     ################################################
