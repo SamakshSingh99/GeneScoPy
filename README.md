@@ -82,8 +82,5 @@ Contributions are welcome! If you'd like to enhance the tool or fix any bugs:
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
-Special thanks to the bioinformatics community for inspiring this project.
-
 ## Contact
 For questions or support, please open an issue on the GitHub repository.
