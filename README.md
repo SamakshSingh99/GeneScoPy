@@ -1,6 +1,7 @@
 # GeneScoPy
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
 
 
 Genome assembly sequence and GFF/GTF file analyzer
