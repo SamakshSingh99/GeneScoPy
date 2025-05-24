@@ -361,6 +361,78 @@ class GenomeAssemblyApp(tk.Tk):
                     self.sequence_text.tag_configure("highlight", background="cyan")
                 else:
                     messagebox.showerror("Error", f"Scaffold {scaffold} not found in FASTA file.")
+    
+    
+    ################################################
+    # Function to Export Data as whole or selected #
+    ################################################
+            
+    def export_selected_row(self):
+        selected_item = self.table.selection()
+        if not selected_item:
+            messagebox.showinfo("Info", "No annotation row selected.")
+            return
+    
+        row_data = self.table.item(selected_item[0], 'values')
+        save_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")])
+    
+        if save_path:
+            try:
+                with open(save_path, "w") as f:
+                    headers = ["Scaffold", "Source", "Feature", "Start", "End", "Strand", "Frame", "Product", "Gene Name"]
+                    f.write(",".join(headers) + "\n")
+                    f.write(",".join(str(i) for i in row_data) + "\n")
+                messagebox.showinfo("Success", f"Annotation row exported to {save_path}")
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+                
+    def export_full_scaffold(self):
+        selected = self.scaffold_listbox.curselection()
+        if not selected:
+            messagebox.showinfo("Info", "Please select a scaffold.")
+            return
+
+        scaffold = self.scaffold_listbox.get(selected)
+        sequence = self.scaffold_map.get(scaffold, "")
+
+        save_path = filedialog.asksaveasfilename(defaultextension=".fasta", filetypes=[("FASTA files", "*.fasta")])
+        if save_path:
+            try:
+                with open(save_path, "w") as f:
+                    f.write(f">{scaffold}\n")
+                    for i in range(0, len(sequence), 80):
+                        f.write(sequence[i:i+80] + "\n")
+                messagebox.showinfo("Success", f"Scaffold exported to {save_path}")
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+
+    def export_highlighted_region(self):
+        selected_item = self.table.selection()
+        if not selected_item:
+            messagebox.showinfo("Info", "No annotation row selected.")
+            return
+
+        item_values = self.table.item(selected_item[0], 'values')
+        scaffold = item_values[0]
+        start = int(item_values[3])
+        end = int(item_values[4])
+
+        if scaffold not in self.scaffold_map:
+            messagebox.showerror("Error", f"{scaffold} not found in loaded FASTA.")
+            return
+
+        region_seq = self.scaffold_map[scaffold][start-1:end]
+
+        save_path = filedialog.asksaveasfilename(defaultextension=".fasta", filetypes=[("FASTA files", "*.fasta")])
+        if save_path:
+            try:
+                with open(save_path, "w") as f:
+                    f.write(f">{scaffold}:{start}-{end}\n")
+                    for i in range(0, len(region_seq), 80):
+                        f.write(region_seq[i:i+80] + "\n")
+                messagebox.showinfo("Success", f"Region exported to {save_path}")
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
 
 
 if __name__ == "__main__":
