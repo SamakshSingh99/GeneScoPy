@@ -135,7 +135,7 @@ class GenomeAssemblyApp(tk.Tk):
     ###############################
 
     def open_fasta(self):
-        file_path = filedialog.askopenfilename(filetypes=[("FASTA files", "*.fasta"), ("All files", "*.*")])
+        file_path = filedialog.askopenfilename(filetypes=[("FASTA files", "*.fasta *.fa *.fna"), ("All files", "*.*")])
         if file_path:
             self.process_fasta(file_path)
     
